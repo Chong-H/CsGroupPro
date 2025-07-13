@@ -27,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
+        user.setCreate_time(
+                (userRepository.findById(user.getUserId())).get().getCreate_time()
+        );
         return userRepository.save(user);
     }
 

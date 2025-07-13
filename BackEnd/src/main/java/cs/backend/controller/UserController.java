@@ -17,28 +17,39 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/getall")
-    public ResponseMessage<List<User>> getAllAccounts() {
+    public ResponseMessage<List<User>> getAllAccounts() {//不需要id
         List<User> users = userService.getall();
 
         return ResponseMessage.success(users);
     }
     @PostMapping("/add")
-    public ResponseMessage<User> addAccount(@RequestBody User user) {
-        User add= userService.addUser(user);
-        return ResponseMessage.success(add);
+    public ResponseMessage<User> addAccount(@RequestBody User user) {//不需要id和createtime
+        try{
+            User add= userService.addUser(user);
+            return ResponseMessage.success(add);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
     @PostMapping("/update")
     public ResponseMessage<User> updateAccount(@RequestBody User user) {
-        return ResponseMessage.success(userService.updateUser(user));
+        try{
+             User u = userService.updateUser(user);
+            return ResponseMessage.success(u);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
     @DeleteMapping("/del")
-    public ResponseMessage<String> deleteAccount(@RequestBody User user) {
+    public ResponseMessage<String> deleteAccount(@RequestBody User user) {//需要id
         try{
             userService.deleteUser(user.getUserId());
+            return ResponseMessage.success("success");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return ResponseMessage.success("success");
+
     }
 
 }
