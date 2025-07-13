@@ -61,4 +61,8 @@ public class ResponseMessage<T> {
     public static<T> ResponseMessage<T> success(T data) {
         return new ResponseMessage<>(HttpStatus.OK.value(), "Success", data);
     }
+    // 带自定义状态码的错误
+    public static <T> ResponseMessage<T> error(int code, String msg, T data) {
+        return new ResponseMessage<>(code, msg, null);
+    }
 }

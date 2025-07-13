@@ -51,5 +51,15 @@ public class UserController {
         }
 
     }
+    @GetMapping("login")
+    public ResponseMessage<User> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        List<User> users = userService.getall();
+        for (User user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return ResponseMessage.success(user);
+            }
+        }
+        return ResponseMessage.error(222,"用户不存在",null);
+    }
 
 }
