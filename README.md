@@ -5,6 +5,9 @@ npm install
 pnpm install
 ```
 
+前端运行代码：pnpm dev或者npm run dev
+打包编译前端代码：npm run build
+
 # 后端使用IDEA开发
 
 # 项目相关
