@@ -2,6 +2,8 @@ package cs.backend.service;
 
 import cs.backend.dto.ResponseMessage;
 import cs.backend.pojo.Student;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface StudentService {
     Student getStudentById(Integer id);
@@ -11,4 +13,6 @@ public interface StudentService {
     void deleteStudentById(Integer id);
 
     Student updateStudent(Integer id, Student student);
+
+    Page<Student> listStudents(String name, String classId, String workId, Pageable pageable);
 }

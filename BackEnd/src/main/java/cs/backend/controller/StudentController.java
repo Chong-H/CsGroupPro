@@ -4,11 +4,14 @@ import cs.backend.dto.ResponseMessage;
 import cs.backend.pojo.Student;
 import cs.backend.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/api/student")
 public class StudentController {
 
     @Autowired
@@ -32,25 +35,55 @@ public class StudentController {
     * */
     @PostMapping("/add")
     public ResponseMessage<Student> addStudent(@RequestBody Student student) {
-        Student s = studentService.addStudent(student);
-        return ResponseMessage.success(s);
+        try {
+            Student s = studentService.addStudent(student);
+            return ResponseMessage.success(s);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseMessage<Student> getStudentById(@PathVariable Integer id) {
-        Student student = studentService.getStudentById(id);
-        return ResponseMessage.success(student);
+        try {
+            Student student = studentService.getStudentById(id);
+            return ResponseMessage.success(student);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseMessage deleteStudentById(@PathVariable Integer id) {
-        studentService.deleteStudentById(id);
-        return ResponseMessage.success(null);
+        try {
+            studentService.deleteStudentById(id);
+            return ResponseMessage.success(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseMessage<Student> updateStudent(@PathVariable Integer id, @RequestBody Student student) {
-        Student s = studentService.updateStudent(id, student);
-        return ResponseMessage.success(s);
+        try {
+            Student s = studentService.updateStudent(id, student);
+            return ResponseMessage.success(s);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseMessage<Page<Student>> listStudents(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String classId,
+            @RequestParam(required = false) String workId,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        try {
+            Page<Student> studentPage = studentService.listStudents(name, classId, workId, pageable);
+            return ResponseMessage.success(studentPage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

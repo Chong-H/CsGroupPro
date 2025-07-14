@@ -4,29 +4,25 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.ClassInfo;
 
-@Entity(name="student_info")
+@Entity(name = "teacher_info")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Student{
+@NoArgsConstructor
+public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "birth_date")
-    private String birthDate;
+    @Column(name = "course_name")
+    private String courseName;
 
-    @Column(name = "status")
-    private Integer status;
-
-    @Column(name = "class_id")
-    private String classId;
+    @Column(name = "job_title")
+    private String jobTitle;
 
     // 添加 CascadeType.ALL 和 orphanRemoval = true
     // CascadeType.ALL: 当我们保存/更新/删除学生时，相关的User也会被自动处理。
-    // orphanRemoval = true: 如果一个User不再被任何Student引用，它将被删除。
+    // orphanRemoval = true: 如果一个User不再被任何Teacheer引用，它将被删除。
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "work_id", referencedColumnName = "work_id")
     private User user;
