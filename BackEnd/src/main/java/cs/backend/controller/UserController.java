@@ -6,6 +6,7 @@ import cs.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,10 @@ public class UserController {
         List<User> users = userService.getall();
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                user.setLastlogintime(LocalDateTime.now().toString());
+                userService.updateUser(user);
                 return ResponseMessage.success(user);
+
             }
         }
         return ResponseMessage.error(222,"用户不存在",null);
