@@ -1,8 +1,11 @@
 package cs.backend.pojo;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 @Table(name = "courses")
 @Entity
+@Data
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,52 +14,15 @@ public class Course {
     @Column(nullable = false)
     private String name;
 
+    @Column()
     private Integer classId;
-
+    @Column()
     private Integer teacherId;
-
+    @Column()
     private String location;
+    @Column()
+    private String semester;
+    @Column()
+    private Integer schedule;
 
-    public Course() {
-    }
-
-    public Integer getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Integer classId) {
-        this.classId = classId;
-    }
-
-    public Integer getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 }
