@@ -4,9 +4,7 @@ import cs.backend.dto.ResponseMessage;
 import cs.backend.pojo.Course;
 import cs.backend.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,37 @@ public class CourseController {
         }catch(Exception e){
             e.printStackTrace();
             return ResponseMessage.error(222,"not exist",null);
+        }
+    }
+    @PostMapping("/add")
+    public ResponseMessage addCourse(@RequestBody Course course){
+        try{
+            courseService.addCourse(course);
+            return ResponseMessage.success(course);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseMessage.error(222,"add error",null);
+        }
+    }
+    @DeleteMapping
+    public ResponseMessage deleteCourse(@RequestBody Course course){
+        try{
+            courseService.deleteCourse(course.getCourseId());
+            return ResponseMessage.success(course);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseMessage.error(222,"del error",null);
+        }
+    }
+    @PostMapping("/update")
+    public ResponseMessage updateCourse(@RequestBody Course course){
+        try{
+            courseService.updateCourse(course);
+            return ResponseMessage.success(course);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseMessage.error(222,"update error",null);
+
         }
     }
 }
