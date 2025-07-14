@@ -21,7 +21,7 @@ public class ClazzServiceImpl implements ClazzService {
 
     @Override
     public Clazz getClazz(int id) {
-        return null;
+        return clazzRepository.findById(id).orElse(null);
     }
 
     @Override
