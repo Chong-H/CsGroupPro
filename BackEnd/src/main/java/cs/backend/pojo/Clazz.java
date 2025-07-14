@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 
 @Table(name = "classes")
 @Entity
-public class Class {
+public class Clazz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer classId;
+    private Integer clazzId;
 
     @Column(nullable = false)
     private String name;
@@ -19,15 +19,15 @@ public class Class {
     private String creationDate;
 
 
-    public Class() {
+    public Clazz() {
     }
 
-    public Integer getClassId() {
-        return classId;
+    public Integer getClazzId() {
+        return clazzId;
     }
 
-    public void setClassId(Integer classId) {
-        this.classId = classId;
+    public void setClazzId(Integer clazzId) {
+        this.clazzId = clazzId;
     }
 
     public String getName() {
