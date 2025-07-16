@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface StudentService {
+    Integer getStudentCount();
+
     Student getStudentById(Integer id);
 
     Student addStudent(Student student);

@@ -24,6 +24,11 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     @Override
+    public Integer getStudentCount() {
+        return studentRepository.findAll().size();
+    }
+
+    @Override
     public Student getStudentById(Integer id) {
         return studentRepository.findById(id).orElse(null);
     }
@@ -92,5 +97,6 @@ public class StudentServiceImpl implements StudentService {
 
         return studentRepository.findAll(spec, pageable);
     }
+
 
 }

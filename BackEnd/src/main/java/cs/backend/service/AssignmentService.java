@@ -12,4 +12,5 @@ public interface AssignmentService {
     List<Assignment> updateAssignmentsByCriteria(Assignment updates, Integer clazzId, Integer courseId, Integer teacherId);
 
     long deleteAssignmentsByCriteria(Integer clazzId, Integer courseId, Integer teacherId);
+
 }

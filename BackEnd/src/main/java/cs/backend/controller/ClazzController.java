@@ -20,6 +20,16 @@ public class ClazzController {
     /**
      * 获取所有班级列表
      */
+    @GetMapping("/num")
+    public ResponseMessage<Integer> getNum() {
+        try{
+            Integer size= clazzService.getAllClazzes().size();
+            return ResponseMessage.success(size);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseMessage.error(500, "获取班级数量失败", null);
+        }
+    }
     @GetMapping("/all")
     public ResponseMessage<List<Clazz>> getAllClazzes() {
         try {

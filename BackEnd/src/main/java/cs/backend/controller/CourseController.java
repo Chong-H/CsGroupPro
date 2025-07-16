@@ -24,6 +24,16 @@ public class CourseController {
             return ResponseMessage.error(222,"not exist",null);
         }
     }
+    @GetMapping("/num")
+    public ResponseMessage<Integer> getCourseNum(){
+        try{
+            int size=courseService.getAllCourses().size();
+            return ResponseMessage.success(size);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseMessage.error(222,"error",null);
+        }
+    }
     @PostMapping("/add")
     public ResponseMessage addCourse(@RequestBody Course course){
         try{
