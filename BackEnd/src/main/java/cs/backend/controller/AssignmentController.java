@@ -17,6 +17,15 @@ public class AssignmentController {
     private AssignmentService assignmentService;
 
 
+    @GetMapping("/num")
+    public ResponseMessage<Integer> getAssignmentsnum() {
+        try{
+            int size=assignmentService.findAssignmentsByCriteria(null,null,null).size();
+            return ResponseMessage.success(size);
+        } catch (Exception e) {
+            return ResponseMessage.error(300, "查询作业数量失败", null);
+        }
+    }
     @PostMapping("/create")
     public ResponseMessage<Assignment> createAssignment(@RequestBody Assignment assignment) {
         try {

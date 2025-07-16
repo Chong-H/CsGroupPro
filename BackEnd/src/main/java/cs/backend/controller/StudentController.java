@@ -43,6 +43,15 @@ public class StudentController {
             throw new RuntimeException(e);
         }
     }
+    @GetMapping("/num")
+    public ResponseMessage<Integer> getStudentNum() {
+        try{
+            int size=studentService.getStudentCount();
+            return ResponseMessage.success(size);
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage<Student> getStudentById(@PathVariable Integer id) {
