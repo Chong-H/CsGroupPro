@@ -23,6 +23,6 @@ public class Course {
     @Column()
     private String semester;
     @Column()
-    private Integer schedule;
+    private String schedule;
 
 }
