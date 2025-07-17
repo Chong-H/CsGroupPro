@@ -37,6 +37,10 @@ public class TeacherServiceImpl implements TeacherService {
             try {
                 String decryptedPhone = cryptDBServices.decryptString(teacher.getUser().getPhone(), SECRET_KEY);
                 teacher.getUser().setPhone(decryptedPhone);
+                String decryptedPassword=cryptDBServices.decryptString(teacher.getUser().getPassword(), SECRET_KEY);
+                teacher.getUser().setPassword(decryptedPassword);
+//                String decryptUsername= cryptDBServices.decryptString(teacher.getUser().getUsername(), SECRET_KEY);
+//                teacher.getUser().setUsername(decryptUsername);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -59,6 +63,11 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             String encryptedPhone = cryptDBServices.encryptString(newTeacher.getUser().getPhone(), SECRET_KEY);
             newTeacher.getUser().setPhone(encryptedPhone);
+            String encryptedPassword=cryptDBServices.encryptString(newTeacher.getUser().getPassword(), SECRET_KEY);
+            newTeacher.getUser().setPassword(encryptedPassword);
+//            String encryptedUsername=cryptDBServices.encryptString(newTeacher.getUser().getUsername(), SECRET_KEY);
+//            newTeacher.getUser().setUsername(encryptedUsername);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -84,6 +93,11 @@ public class TeacherServiceImpl implements TeacherService {
         try {
             String encryptedPhone = cryptDBServices.encryptString(u.getPhone(), SECRET_KEY);
             u.setPhone(encryptedPhone);
+            String encryptedPassword=cryptDBServices.encryptString(u.getPassword(), SECRET_KEY);
+            u.setPassword(encryptedPassword);
+//            String encryptedUsername=cryptDBServices.encryptString(u.getUsername(), SECRET_KEY);
+//            u.setUsername(encryptedUsername);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -129,6 +143,11 @@ public class TeacherServiceImpl implements TeacherService {
                 try {
                     String decryptedPhone = cryptDBServices.decryptString(u.getPhone(), SECRET_KEY);
                     u.setPhone(decryptedPhone);
+                    String decryptedPassword=cryptDBServices.decryptString(u.getPassword(), SECRET_KEY);
+                    u.setPassword(decryptedPassword);
+//                    String decryptedUsername=cryptDBServices.decryptString(u.getUsername(), SECRET_KEY);
+//                    u.setUsername(decryptedUsername);
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

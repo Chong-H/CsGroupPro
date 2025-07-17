@@ -19,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/getall")
-    public ResponseMessage<List<User>> getAllAccounts() {//不需要id
+    public ResponseMessage<List<User>> getAllAccounts() throws Exception {//不需要id
         List<User> users = userService.getall();
 
         return ResponseMessage.success(users);
@@ -54,7 +54,7 @@ public class UserController {
 
     }
     @GetMapping("login")
-    public ResponseMessage<User> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public ResponseMessage<User> login(@RequestParam("username") String username, @RequestParam("password") String password) throws Exception {
         List<User> users = userService.getall();
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {

@@ -15,10 +15,17 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    CryptDBServices cryptDBServices;
+    private final String SECRET_KEY = "abcdefghabcdefgh"; // 你实际的密钥
     @Override
-    public List<User> getall() {
-        return userRepository.findAll();
+    public List<User> getall() throws Exception {
+        List<User>users= userRepository.findAll();
+        for (User user:users) {
+            user.setPassword(cryptDBServices.decryptString(user.getPassword(),SECRET_KEY));
+            user.setPhone(cryptDBServices.decryptString(user.getPhone(),SECRET_KEY));
+        }
+        return users;
     }
 
     @Override

@@ -38,12 +38,18 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(id).orElse(null);
         if (student != null && student.getUser() != null) {
             String decryptedPhone = null;
+            String decryptedPassword = null;
+            String decryptedusername = null;
             try {
                 decryptedPhone = cryptDBServices.decryptString(student.getUser().getPhone(), SECRET_KEY);
+                decryptedPassword = cryptDBServices.decryptString(student.getUser().getPassword(), SECRET_KEY);
+                decryptedusername = cryptDBServices.decryptString(student.getUser().getUsername(), SECRET_KEY);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             student.getUser().setPhone(decryptedPhone);
+            student.getUser().setPassword(decryptedPassword);
+//            student.getUser().setUsername(decryptedusername);
         }
         return student;
 //        return studentRepository.findById(id).orElse(null);
@@ -59,9 +65,15 @@ public class StudentServiceImpl implements StudentService {
         u.setLastlogintime(LocalDateTime.now().toString());
         // ✅ 加密手机号
         String encryptedPhone = null;
+        String encryptedPassword = null;
+        String encryptedusername = null;
         try {
             encryptedPhone = cryptDBServices.encryptString(u.getPhone().toString(), SECRET_KEY);
             u.setPhone(encryptedPhone);
+            encryptedPassword = cryptDBServices.encryptString(u.getPassword().toString(), SECRET_KEY);
+            u.setPassword(encryptedPassword);
+//            encryptedusername = cryptDBServices.encryptString(u.getUsername().toString(), SECRET_KEY);
+//            u.setUsername(encryptedusername);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -89,8 +101,15 @@ public class StudentServiceImpl implements StudentService {
         newStudent.getUser().setLastlogintime(oldStudent.getUser().getLastlogintime());
 
         String encryptedPhone = null;
+        String encryptedPassword = null;
+        String encryptedusername = null;
+
         encryptedPhone=cryptDBServices.encryptString(newStudent.getUser().getPhone(),SECRET_KEY);
         newStudent.getUser().setPhone(encryptedPhone);
+        encryptedPassword = cryptDBServices.encryptString(newStudent.getUser().getPassword(),SECRET_KEY);
+        newStudent.getUser().setPassword(encryptedPassword);
+//        encryptedusername = cryptDBServices.encryptString(newStudent.getUser().getUsername(),SECRET_KEY);
+//        newStudent.getUser().setUsername(encryptedusername);
 
 
 
@@ -134,6 +153,10 @@ public class StudentServiceImpl implements StudentService {
             if (u != null) {
                 String decryptedPhone = cryptDBServices.safeDecrypt(u.getPhone(), SECRET_KEY);
                 u.setPhone(decryptedPhone);
+                String decryptedPassword = cryptDBServices.safeDecrypt(u.getPassword(), SECRET_KEY);
+                u.setPassword(decryptedPassword);
+//                String decryptedusername = cryptDBServices.safeDecrypt(u.getUsername(), SECRET_KEY);
+//                u.setUsername(decryptedusername);
             }
         }
         return page;
