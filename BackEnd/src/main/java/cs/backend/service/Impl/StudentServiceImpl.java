@@ -3,6 +3,7 @@ package cs.backend.service.Impl;
 import cs.backend.pojo.Student;
 import cs.backend.pojo.User;
 import cs.backend.reporitoty.StudentRepository;
+import cs.backend.service.CryptDBServices;
 import cs.backend.service.StudentService;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -23,6 +24,10 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private CryptDBServices cryptDBServices;
+
+    private final String SECRET_KEY = "abcdefghabcdefgh"; // 你实际的密钥
     @Override
     public Integer getStudentCount() {
         return studentRepository.findAll().size();
@@ -30,7 +35,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentById(Integer id) {
-        return studentRepository.findById(id).orElse(null);
+        Student student = studentRepository.findById(id).orElse(null);
+        if (student != null && student.getUser() != null) {
+            String decryptedPhone = null;
+            try {
+                decryptedPhone = cryptDBServices.decryptString(student.getUser().getPhone(), SECRET_KEY);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            student.getUser().setPhone(decryptedPhone);
+        }
+        return student;
+//        return studentRepository.findById(id).orElse(null);
     }
     @Override
     public Student addStudent(Student student) {
@@ -41,6 +57,16 @@ public class StudentServiceImpl implements StudentService {
         u.setPassword((u.getPassword() == null) || (u.getPassword() == "") ? "123456" : u.getPassword());
         u.setCreate_time(LocalDateTime.now().toString());
         u.setLastlogintime(LocalDateTime.now().toString());
+        // ✅ 加密手机号
+        String encryptedPhone = null;
+        try {
+            encryptedPhone = cryptDBServices.encryptString(u.getPhone().toString(), SECRET_KEY);
+            u.setPhone(encryptedPhone);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         studentRepository.save(student);
         return student;
     }
@@ -51,15 +77,21 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student updateStudent(Integer id, Student student) {
+    public Student updateStudent(Integer id, Student student) throws Exception {
         Student oldStudent = studentRepository.findById(id).orElse(null);
         if(oldStudent == null) {
             throw new IllegalArgumentException("Student not found");
         }
         Student newStudent = new Student();
+
         BeanUtils.copyProperties(student, newStudent);
         newStudent.getUser().setCreate_time(oldStudent.getUser().getCreate_time());
         newStudent.getUser().setLastlogintime(oldStudent.getUser().getLastlogintime());
+
+        String encryptedPhone = null;
+        encryptedPhone=cryptDBServices.encryptString(newStudent.getUser().getPhone(),SECRET_KEY);
+        newStudent.getUser().setPhone(encryptedPhone);
+
 
 
         studentRepository.save(newStudent);
@@ -67,7 +99,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Page<Student> listStudents(String name, String classId, String workId, Pageable pageable) {
+    public Page<Student> listStudents(String name, String classId, String workId, Pageable pageable) throws Exception {
         Specification<Student> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -95,7 +127,16 @@ public class StudentServiceImpl implements StudentService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        return studentRepository.findAll(spec, pageable);
+        //return studentRepository.findAll(spec, pageable);
+        Page<Student> page = studentRepository.findAll(spec, pageable);
+        for (Student student : page.getContent()) {
+            User u = student.getUser();
+            if (u != null) {
+                String decryptedPhone = cryptDBServices.safeDecrypt(u.getPhone(), SECRET_KEY);
+                u.setPhone(decryptedPhone);
+            }
+        }
+        return page;
     }
 
 

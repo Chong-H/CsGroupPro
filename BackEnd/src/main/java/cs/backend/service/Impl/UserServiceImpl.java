@@ -2,6 +2,7 @@ package cs.backend.service.Impl;
 
 import cs.backend.pojo.User;
 import cs.backend.reporitoty.UserRepository;
+import cs.backend.service.CryptDBServices;
 import cs.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
     @Override
     public List<User> getall() {
         return userRepository.findAll();

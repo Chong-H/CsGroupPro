@@ -5,6 +5,7 @@ import cs.backend.pojo.Student;
 import cs.backend.pojo.Teacher;
 import cs.backend.pojo.User;
 import cs.backend.reporitoty.TeacherRepository;
+import cs.backend.service.CryptDBServices;
 import cs.backend.service.TeacherService;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.BeanUtils;
@@ -25,10 +26,24 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private CryptDBServices cryptDBServices;
+    private final String SECRET_KEY = "abcdefghabcdefgh"; // 你实际的密钥
+
     @Override
     public Teacher getTeacherById(int id) {
-        return teacherRepository.findById(id).orElse(null);
+        Teacher teacher = teacherRepository.findById(id).orElse(null);
+        if (teacher != null && teacher.getUser() != null) {
+            try {
+                String decryptedPhone = cryptDBServices.decryptString(teacher.getUser().getPhone(), SECRET_KEY);
+                teacher.getUser().setPhone(decryptedPhone);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return teacher;
     }
+
 
     @Override
     public Teacher updateTeacher(int id, Teacher teacher) {
@@ -41,6 +56,12 @@ public class TeacherServiceImpl implements TeacherService {
         newTeacher.getUser().setCreate_time(oldTeacher.getUser().getCreate_time());
         newTeacher.getUser().setLastlogintime(oldTeacher.getUser().getLastlogintime());
 
+        try {
+            String encryptedPhone = cryptDBServices.encryptString(newTeacher.getUser().getPhone(), SECRET_KEY);
+            newTeacher.getUser().setPhone(encryptedPhone);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         teacherRepository.save(newTeacher);
         return newTeacher;
@@ -60,6 +81,13 @@ public class TeacherServiceImpl implements TeacherService {
         u.setPassword((u.getPassword() == null) || (u.getPassword() == "") ? "123456" : u.getPassword());
         u.setCreate_time(LocalDateTime.now().toString());
         u.setLastlogintime(LocalDateTime.now().toString());
+        try {
+            String encryptedPhone = cryptDBServices.encryptString(u.getPhone(), SECRET_KEY);
+            u.setPhone(encryptedPhone);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         teacherRepository.save(teacher);
         return teacher;
     }
@@ -92,6 +120,20 @@ public class TeacherServiceImpl implements TeacherService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        return teacherRepository.findAll(spec, pageable);
+        Page<Teacher> page = teacherRepository.findAll(spec, pageable);
+
+        // 解密手机号
+        for (Teacher teacher : page.getContent()) {
+            User u = teacher.getUser();
+            if (u != null) {
+                try {
+                    String decryptedPhone = cryptDBServices.decryptString(u.getPhone(), SECRET_KEY);
+                    u.setPhone(decryptedPhone);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return page;
     }
 }
