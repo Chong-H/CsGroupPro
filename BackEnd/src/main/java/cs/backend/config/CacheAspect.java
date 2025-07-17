@@ -16,10 +16,14 @@ public class CacheAspect {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    // 拦截所有Service层的get/find/query开头的方法
-    @Around("execution(* cs.backend.service..*.get*(..)) || execution(* cs.backend.service..*.find*(..)) || execution(* cs.backend.service..*.query*(..))")
+    // 拦截所有Service层的方法
+    @Around("execution(public * cs.backend.service..*.*(..))")
     public Object cache(ProceedingJoinPoint joinPoint) throws Throwable {
+        String methodName = joinPoint.getSignature().getName();
+        System.out.println("AOP拦截到方法: " + methodName); // 添加这行
+
         String key = generateKey(joinPoint);
+        System.out.println("缓存key: " + key); // 添加这行
         try {
             Object value = redisTemplate.opsForValue().get(key);
             if (value != null) {
