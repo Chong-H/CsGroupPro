@@ -41,9 +41,9 @@ public class encryptTest {
 //        if (str.length() % 4 != 0) return true;//长度不为4，代表未加密过
 //        return false;
         if(str.equals("admin")){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -53,10 +53,11 @@ public class encryptTest {
     @Transactional
     @Commit
     public void encryptAllUnencryptedPhones() {
-        List<Teacher> Users = teacherRepository.findAll();
+
+        List<User> Users = userRepository.findAll();
         int countEncrypted = 0;
-        for (Teacher t : Users) {
-            User u=t.getUser();
+        for (User u : Users) {
+           // User u=t.getUser();
             if (u == null) continue;
             String username = u.getUsername();
             if (username == null || username.isEmpty()) continue;
@@ -65,11 +66,12 @@ public class encryptTest {
             if (needEncrypt(username)) {
                 System.out.println("原始值：" + username);
                 try {
-                    String encrypted = cryptDBServices.decryptString(username, secretKey);
-                    u.setUsername(encrypted);
+                    String encrypted = cryptDBServices.encryptString(u.getPhone(), secretKey);
+                    u.setPhone(encrypted);
+                    u.setPassword(cryptDBServices.encryptString(u.getPassword(), secretKey));
                     System.out.println("加密后：" + encrypted);
-                    t.setUser(u);
-                    teacherRepository.save(t);
+                    //.setUser(u);
+                    //teacherRepository.save(t);
                     countEncrypted++;
                 } catch (Exception e) {
                     System.err.println("加密失败，用户ID：" + u.getUserId() + "，错误：" + e.getMessage());
