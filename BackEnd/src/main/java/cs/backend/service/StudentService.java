@@ -17,4 +17,6 @@ public interface StudentService {
     Student updateStudent(Integer id, Student student) throws Exception;
 
     Page<Student> listStudents(String name, String classId, String workId, Pageable pageable) throws Exception;
+
+    Integer getStudentclazzById(String name) throws Exception;
 }

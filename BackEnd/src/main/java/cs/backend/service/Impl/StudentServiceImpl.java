@@ -162,5 +162,16 @@ public class StudentServiceImpl implements StudentService {
         return page;
     }
 
+    @Override
+    public Integer getStudentclazzById(String name) throws Exception {
+        List<Student> s =studentRepository.findAll();
+        for (Student student : s) {
+            if(student.getUser().getUsername().equals(name)) {
+                return Integer.valueOf(student.getClassId());
+            }
+        }
+        return -1;
+    }
+
 
 }

@@ -10,6 +10,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/student")
@@ -95,5 +97,12 @@ public class StudentController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    @GetMapping("/getclazz/{workid}")
+    public ResponseMessage<Integer> getStudentsByWorkId(@PathVariable String workid) throws Exception {
+        //List<Student> s=studentService.listStudents("","","","");
+        Integer i=studentService.getStudentclazzById(workid);
+
+        return ResponseMessage.success(i);
     }
 }
