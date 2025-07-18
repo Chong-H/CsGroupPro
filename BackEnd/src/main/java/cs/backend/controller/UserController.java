@@ -3,6 +3,7 @@ package cs.backend.controller;
 import cs.backend.dto.ResponseMessage;
 import cs.backend.pojo.User;
 import cs.backend.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,9 +59,12 @@ public class UserController {
         List<User> users = userService.getall();
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                User copy = new User(); // 或者 new UserDTO() 更好
+                BeanUtils.copyProperties(user, copy); // Spring 提供的浅拷贝
                 user.setLastlogintime(LocalDateTime.now().toString());
                 userService.updateUser(user);
-                return ResponseMessage.success(user);
+
+                return ResponseMessage.success(copy);
 
             }
         }
